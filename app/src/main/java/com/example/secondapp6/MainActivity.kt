@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -17,14 +18,19 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
@@ -34,6 +40,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -84,12 +91,9 @@ fun ScaffoldExample() {
             )
         },
         bottomBar = {
-            //action이 들어가 있는 bottom app bar
-            //  이것도 row scope가 들어가있음
             BottomAppBar(actions = {
                 IconButton(onClick = {}) {
                     Icon(imageVector = Icons.Filled.Check, contentDescription = "Check")
-                    //위 코드 한 줄을 이 안에 더 넣으면 겹쳐져 버림... 같은 위치에.
                 }
                 IconButton(onClick = {}) {
                     Icon(imageVector = Icons.Filled.Edit, contentDescription = "Check")
@@ -98,8 +102,6 @@ fun ScaffoldExample() {
                     Icon(imageVector = Icons.Filled.Info, contentDescription = "Check")
                 }
             },
-                //bottomappbar의 actions의 괄호 범위 안에 floatingactionbutton 넣을 수 있음..
-                // bottom app bar 안의 구성요소로 fab가 들어간 것임!
                 floatingActionButton = {
                     FloatingActionButton(onClick = {presses += 1}) {
                         Icon(imageVector = Icons.Default.Add, contentDescription = "Add")
@@ -114,8 +116,14 @@ fun ScaffoldExample() {
         }
     ) { innerPadding ->
         Column(
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-            modifier = Modifier.padding(innerPadding)
+//            verticalArrangement = Arrangement.spacedBy(16.dp),
+            //  center로 바꾸기 전에, 컬럼의 영역을 전체로 바꿔준 다음에 해야 함!
+            //body에서 컬럼의 내용을 세로중앙 정렬... 중앙정렬이 아님! y축 방향으로...
+            verticalArrangement = Arrangement.Center,
+            //이건 컬럼들 단위로 중앙정렬... 컬럼 안의 텍스트에 대해서는(버튼 안 텍스트 제외) 중앙정렬하지 않음
+            horizontalAlignment = Alignment.CenterHorizontally,
+//            modifier = Modifier.padding(innerPadding)
+            modifier = Modifier.fillMaxHeight().padding(innerPadding)
         ) {
             Text(
                 modifier = Modifier.padding((8.dp)),
@@ -126,6 +134,20 @@ fun ScaffoldExample() {
                                     You have pressed the floating action button $presses times
                                 """.trimIndent()
             )
+            //버튼 추가
+            //  배치, 배열은 위에서, 컬럼 다음의 괄호 안에서 처리
+            //그냥 button으로 해도 됨... 색은 기본색
+//            Button(onClick = {}) {
+            //이러면 색이 바뀜... primary 색과 맞춰서 자동으로 들어감.
+//            FilledTonalButton(onClick = {}) {
+            //이러면 테두리 있는 버튼
+//            OutlinedButton(onClick = {}) {
+            //약간 입체적...?
+//            ElevatedButton(onClick = {}) {
+            //텍스트만 있는 버튼
+            TextButton(onClick = {}) {
+                Text("Filled")
+            }
         }
     }
 }
