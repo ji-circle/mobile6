@@ -12,7 +12,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -59,26 +61,18 @@ fun ScaffoldExample() {
 
     Scaffold(
         topBar = {
-            //가운데정렬 하기 위해 centeralignedTopappbar
-//            TopAppBar(
             CenterAlignedTopAppBar(
                 colors = topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
                     titleContentColor = MaterialTheme.colorScheme.primary
                 ),
                 title = { Text("Top App Bar") },
-                //네비게이션 아이콘 (뒤로가기)
                 navigationIcon = {
                     IconButton(onClick = {}) {
                         Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Some Description")
                     }
                 },
-                //액션
-                //  액션의 디폴트 레이아웃이 row임... row를 굳이 명시하지 않아도 이건 row로 구성될 것임...
-                //     row scope로 되어있어서 컴포저블이 다 row로 자동으로 구성되는 것임
-                //    우측에 메뉴 버튼 생김...
                 actions = {
-                    //액션즈 라서 여러 개 만들 수 있음... 우측으로 더 생김.
                     IconButton(onClick = {}) {
                         Icon(imageVector = Icons.Filled.Menu, contentDescription = "Menu")
                     }
@@ -90,16 +84,28 @@ fun ScaffoldExample() {
             )
         },
         bottomBar = {
-            BottomAppBar(
-                containerColor = MaterialTheme.colorScheme.primaryContainer,
-                contentColor = MaterialTheme.colorScheme.primary
-            ) {
-                Text(
-                    modifier = Modifier.fillMaxWidth(),
-                    textAlign = TextAlign.Center,
-                    text = "Bottom App Bar"
-                )
-            }
+            //action이 들어가 있는 bottom app bar
+            //  이것도 row scope가 들어가있음
+            BottomAppBar(actions = {
+                IconButton(onClick = {}) {
+                    Icon(imageVector = Icons.Filled.Check, contentDescription = "Check")
+                    //위 코드 한 줄을 이 안에 더 넣으면 겹쳐져 버림... 같은 위치에.
+                }
+                IconButton(onClick = {}) {
+                    Icon(imageVector = Icons.Filled.Edit, contentDescription = "Check")
+                }
+                IconButton(onClick = {}) {
+                    Icon(imageVector = Icons.Filled.Info, contentDescription = "Check")
+                }
+            },
+                //bottomappbar의 actions의 괄호 범위 안에 floatingactionbutton 넣을 수 있음..
+                // bottom app bar 안의 구성요소로 fab가 들어간 것임!
+                floatingActionButton = {
+                    FloatingActionButton(onClick = {presses += 1}) {
+                        Icon(imageVector = Icons.Default.Add, contentDescription = "Add")
+                    }
+                }
+            )
         },
         floatingActionButton = {
             FloatingActionButton(onClick = { presses += 1 }) {
