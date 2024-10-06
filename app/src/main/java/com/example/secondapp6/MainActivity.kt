@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -19,8 +20,11 @@ import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ElevatedButton
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.FloatingActionButton
@@ -28,6 +32,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -42,6 +47,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -115,38 +121,60 @@ fun ScaffoldExample() {
             }
         }
     ) { innerPadding ->
+        //이 부분을 카드로 바꿔볼것임...
         Column(
-//            verticalArrangement = Arrangement.spacedBy(16.dp),
-            //  center로 바꾸기 전에, 컬럼의 영역을 전체로 바꿔준 다음에 해야 함!
-            //body에서 컬럼의 내용을 세로중앙 정렬... 중앙정렬이 아님! y축 방향으로...
             verticalArrangement = Arrangement.Center,
-            //이건 컬럼들 단위로 중앙정렬... 컬럼 안의 텍스트에 대해서는(버튼 안 텍스트 제외) 중앙정렬하지 않음
             horizontalAlignment = Alignment.CenterHorizontally,
-//            modifier = Modifier.padding(innerPadding)
-            modifier = Modifier.fillMaxHeight().padding(innerPadding)
+            modifier = Modifier.fillMaxSize().padding(innerPadding)
+            //만약 카드 가로 크기를 줄이고 싶다면 아래 코드로 해도 되더라... 나
+//            modifier = Modifier.fillMaxSize().padding(innerPadding).padding(horizontal = 30.dp)
         ) {
-            Text(
-                modifier = Modifier.padding((8.dp)),
-                text =
-                """
+            //카드 부분... 위에 이미 패딩이 되어있어서...?
+            //  만약 카드의 영역이 치우져있다면 위의 modifier에서 수정... (height, weight 모두 범위 지정 잘 되었는지 확인)
+//            Card {
+            //그냥 card로 해도 되긴 함...
+//            ElevatedCard(
+//                //elecatedcard인 경우 더 띄우려면... (그림자생김)
+//                elevation = CardDefaults.cardElevation(
+//                    defaultElevation = 6.dp
+//                )
+//            ){
+
+            //테두리가 있는 카드가 됨... + elevation 주기도 가능.
+            OutlinedCard(
+//                elevation = CardDefaults.cardElevation(
+//                    defaultElevation = 6.dp
+//                )
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surface
+                ),
+                //아웃라인 = border 수정
+                border = BorderStroke(1.dp, Color.Black)
+            ){
+                //이 안의 것들 (여기선 텍스트 덩어리와 버튼)에 대해 가운데 정렬 하고 싶다면 컬럼을 만들어 하위 내용을 감싸기
+                //  그리고 배치, 배열 관련 코드들 작성해주기
+                Column(
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    //카드 내부의 컬럼에 대해 여백을 줘서 카드 크기를 키우기...? modifier로.
+                    modifier = Modifier.padding(vertical = 32.dp)
+                ) {
+                    Text(
+                        modifier = Modifier.padding((8.dp)),
+                        //텍스트에 대해 가운데정렬하려면 여기서
+                        textAlign = TextAlign.Center,
+                        text =
+                        """
                                     This is an example of a scaffold
                                     
                                     You have pressed the floating action button $presses times
                                 """.trimIndent()
-            )
-            //버튼 추가
-            //  배치, 배열은 위에서, 컬럼 다음의 괄호 안에서 처리
-            //그냥 button으로 해도 됨... 색은 기본색
-//            Button(onClick = {}) {
-            //이러면 색이 바뀜... primary 색과 맞춰서 자동으로 들어감.
-//            FilledTonalButton(onClick = {}) {
-            //이러면 테두리 있는 버튼
-//            OutlinedButton(onClick = {}) {
-            //약간 입체적...?
-//            ElevatedButton(onClick = {}) {
-            //텍스트만 있는 버튼
-            TextButton(onClick = {}) {
-                Text("Filled")
+                    )
+
+                    Button(onClick = {}) {
+                        Text("Filled")
+                    }
+                }
             }
         }
     }
