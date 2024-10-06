@@ -57,6 +57,7 @@ class MainActivity : ComponentActivity() {
                                 textAlign = TextAlign.Center,
                                 text = "Bottom App Bar")
                         }
+
                     }
                 ) { innerPadding ->
                     Greeting(
