@@ -21,6 +21,12 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -28,7 +34,8 @@ import androidx.compose.ui.unit.dp
 import com.example.secondapp6.ui.theme.SecondApp6Theme
 
 class MainActivity : ComponentActivity() {
-    @OptIn(ExperimentalMaterial3Api::class)
+    //아래에서 Scaffold 이하 내용 복사해서 옮겨넣으면서 api 어쩌구를 opt in for 했음... 그래서 아래 코드 없앰
+//    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -37,70 +44,108 @@ class MainActivity : ComponentActivity() {
                 //scaffold = 틀...
                 //  modifier 부분을 지웠음
 //                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                Scaffold(
-                    topBar = {
-                        TopAppBar(
-                            colors = topAppBarColors(
-                                containerColor = MaterialTheme.colorScheme.primaryContainer,
-                                titleContentColor = MaterialTheme.colorScheme.primary
-                            ),
-                            title = { Text("Top App Bar") }
-                        )
-                    },
-                    bottomBar = {
-                        BottomAppBar(
-                            containerColor = MaterialTheme.colorScheme.primaryContainer,
-                            contentColor = MaterialTheme.colorScheme.primary
-                        ) {
-                            Text(
-                                modifier = Modifier.fillMaxWidth(),
-                                textAlign = TextAlign.Center,
-                                text = "Bottom App Bar"
-                            )
-                        }
-                    },
-                    floatingActionButton = {
-                        FloatingActionButton(onClick = {}) {
-                            Icon(imageVector = Icons.Default.Add, contentDescription = "Add")
-                        }
-                    }
-                ) { innerPadding ->
-                    // 하단 지움
-//                    Greeting(
-//                        name = "Android",
+//                Scaffold(
+//                    topBar = {
+//                        TopAppBar(
+//                            colors = topAppBarColors(
+//                                containerColor = MaterialTheme.colorScheme.primaryContainer,
+//                                titleContentColor = MaterialTheme.colorScheme.primary
+//                            ),
+//                            title = { Text("Top App Bar") }
+//                        )
+//                    },
+//                    bottomBar = {
+//                        BottomAppBar(
+//                            containerColor = MaterialTheme.colorScheme.primaryContainer,
+//                            contentColor = MaterialTheme.colorScheme.primary
+//                        ) {
+//                            Text(
+//                                modifier = Modifier.fillMaxWidth(),
+//                                textAlign = TextAlign.Center,
+//                                text = "Bottom App Bar"
+//                            )
+//                        }
+//                    },
+//                    floatingActionButton = {
+//                        FloatingActionButton(onClick = {}) {
+//                            Icon(imageVector = Icons.Default.Add, contentDescription = "Add")
+//                        }
+//                    }
+//                ) { innerPadding ->
+//                    Column(
+//                        verticalArrangement = Arrangement.spacedBy(16.dp),
 //                        modifier = Modifier.padding(innerPadding)
-//                    )
-                    //이부분에서 fab나 top, bottombar 사이의 body 부분의 것들 수정함
-                    //컬럼에서 시스템이 주는 여백을 반영해줄것임...
-                    //  그리고 이 안의 텍스트 등 내용물(컴포넌트들)의 배치, 배열과 관련된 수정은 컬럼 뒤 () 안에서 하기
-                    Column(
-                        verticalArrangement = Arrangement.spacedBy(16.dp),
-                        modifier = Modifier.padding(innerPadding)
-                    ) {
-                        //이 아래에 Text() 로 텍스트 여러 개 각각 보여줄 수 있음.  쉼표 안 해도 됨
-                        Text(
-                            //body 부분에 나타나는 텍스트의 패딩을 여기서 준다
-                            modifier = Modifier.padding((8.dp)),
-                            text =
-                                """
-                                    This is an example of a scaffold
-                                    
-                                    You have pressed the floating action button x times
-                                """.trimIndent()
-                        )
-                        Text(
-                            //body 부분에 나타나는 텍스트의 패딩을 여기서 준다
-                            modifier = Modifier.padding((8.dp)),
-                            text =
-                            """
-                                    This is an example of a scaffold
-                                    
-                                    You have pressed the floating action button x times
-                                """.trimIndent()
-                        )
-                    }
-                }
+//                    ) {
+//                        Text(
+//                            modifier = Modifier.padding((8.dp)),
+//                            text =
+//                                """
+//                                    This is an example of a scaffold
+//
+//                                    You have pressed the floating action button x times
+//                                """.trimIndent()
+//                        )
+//                    }
+//                }
+                //위 코드 옮긴 후 아래 코드 추가했음
+                ScaffoldExample()
             }
+        }
+    }
+}
+
+//위의 scaffold가 상태를 가지는 함수를 가지고 있어야 위 텍스트의 x의 숫자를 바꿀 수 있음...
+// 상태를 가지는 함수를 만들기
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ScaffoldExample(){
+    //상태를 나타내는 변수 (우린 정수로 나타낼거라 int로 함)
+    var presses by rememberSaveable {mutableIntStateOf(0)}
+
+    //위에 적었던 코드의 Scaffold 이하 전체를 복사해 옮겨넣음
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                colors = topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    titleContentColor = MaterialTheme.colorScheme.primary
+                ),
+                title = { Text("Top App Bar") }
+            )
+        },
+        bottomBar = {
+            BottomAppBar(
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                contentColor = MaterialTheme.colorScheme.primary
+            ) {
+                Text(
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Center,
+                    text = "Bottom App Bar"
+                )
+            }
+        },
+        floatingActionButton = {
+            //클릭할때마다 1만큼 증가
+            FloatingActionButton(onClick = {presses += 1}) {
+                Icon(imageVector = Icons.Default.Add, contentDescription = "Add")
+            }
+        }
+    ) { innerPadding ->
+        Column(
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            modifier = Modifier.padding(innerPadding)
+        ) {
+            Text(
+                modifier = Modifier.padding((8.dp)),
+                text =
+                """
+                                    This is an example of a scaffold
+                                    
+                                    You have pressed the floating action button $presses times
+                                """.trimIndent()
+            )
+            //$presses를 텍스트 안에 넣어줌
         }
     }
 }
