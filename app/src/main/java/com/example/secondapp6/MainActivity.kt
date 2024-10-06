@@ -10,11 +10,16 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -34,83 +39,54 @@ import androidx.compose.ui.unit.dp
 import com.example.secondapp6.ui.theme.SecondApp6Theme
 
 class MainActivity : ComponentActivity() {
-    //아래에서 Scaffold 이하 내용 복사해서 옮겨넣으면서 api 어쩌구를 opt in for 했음... 그래서 아래 코드 없앰
-//    @OptIn(ExperimentalMaterial3Api::class)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             SecondApp6Theme {
-                //scaffold = 틀...
-                //  modifier 부분을 지웠음
-//                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-//                Scaffold(
-//                    topBar = {
-//                        TopAppBar(
-//                            colors = topAppBarColors(
-//                                containerColor = MaterialTheme.colorScheme.primaryContainer,
-//                                titleContentColor = MaterialTheme.colorScheme.primary
-//                            ),
-//                            title = { Text("Top App Bar") }
-//                        )
-//                    },
-//                    bottomBar = {
-//                        BottomAppBar(
-//                            containerColor = MaterialTheme.colorScheme.primaryContainer,
-//                            contentColor = MaterialTheme.colorScheme.primary
-//                        ) {
-//                            Text(
-//                                modifier = Modifier.fillMaxWidth(),
-//                                textAlign = TextAlign.Center,
-//                                text = "Bottom App Bar"
-//                            )
-//                        }
-//                    },
-//                    floatingActionButton = {
-//                        FloatingActionButton(onClick = {}) {
-//                            Icon(imageVector = Icons.Default.Add, contentDescription = "Add")
-//                        }
-//                    }
-//                ) { innerPadding ->
-//                    Column(
-//                        verticalArrangement = Arrangement.spacedBy(16.dp),
-//                        modifier = Modifier.padding(innerPadding)
-//                    ) {
-//                        Text(
-//                            modifier = Modifier.padding((8.dp)),
-//                            text =
-//                                """
-//                                    This is an example of a scaffold
-//
-//                                    You have pressed the floating action button x times
-//                                """.trimIndent()
-//                        )
-//                    }
-//                }
-                //위 코드 옮긴 후 아래 코드 추가했음
+
                 ScaffoldExample()
             }
         }
     }
 }
 
-//위의 scaffold가 상태를 가지는 함수를 가지고 있어야 위 텍스트의 x의 숫자를 바꿀 수 있음...
-// 상태를 가지는 함수를 만들기
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ScaffoldExample(){
-    //상태를 나타내는 변수 (우린 정수로 나타낼거라 int로 함)
-    var presses by rememberSaveable {mutableIntStateOf(0)}
+fun ScaffoldExample() {
+    var presses by rememberSaveable { mutableIntStateOf(0) }
 
-    //위에 적었던 코드의 Scaffold 이하 전체를 복사해 옮겨넣음
     Scaffold(
         topBar = {
-            TopAppBar(
+            //가운데정렬 하기 위해 centeralignedTopappbar
+//            TopAppBar(
+            CenterAlignedTopAppBar(
                 colors = topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
                     titleContentColor = MaterialTheme.colorScheme.primary
                 ),
-                title = { Text("Top App Bar") }
+                title = { Text("Top App Bar") },
+                //네비게이션 아이콘 (뒤로가기)
+                navigationIcon = {
+                    IconButton(onClick = {}) {
+                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Some Description")
+                    }
+                },
+                //액션
+                //  액션의 디폴트 레이아웃이 row임... row를 굳이 명시하지 않아도 이건 row로 구성될 것임...
+                //     row scope로 되어있어서 컴포저블이 다 row로 자동으로 구성되는 것임
+                //    우측에 메뉴 버튼 생김...
+                actions = {
+                    //액션즈 라서 여러 개 만들 수 있음... 우측으로 더 생김.
+                    IconButton(onClick = {}) {
+                        Icon(imageVector = Icons.Filled.Menu, contentDescription = "Menu")
+                    }
+                    IconButton(onClick = {}) {
+                        Icon(imageVector = Icons.Filled.Edit, contentDescription = "Menu")
+                    }
+
+                }
             )
         },
         bottomBar = {
@@ -126,8 +102,7 @@ fun ScaffoldExample(){
             }
         },
         floatingActionButton = {
-            //클릭할때마다 1만큼 증가
-            FloatingActionButton(onClick = {presses += 1}) {
+            FloatingActionButton(onClick = { presses += 1 }) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = "Add")
             }
         }
@@ -145,7 +120,6 @@ fun ScaffoldExample(){
                                     You have pressed the floating action button $presses times
                                 """.trimIndent()
             )
-            //$presses를 텍스트 안에 넣어줌
         }
     }
 }
