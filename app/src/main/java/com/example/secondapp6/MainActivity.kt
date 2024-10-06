@@ -5,7 +5,9 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -14,6 +16,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.secondapp6.ui.theme.SecondApp6Theme
 
@@ -27,25 +30,33 @@ class MainActivity : ComponentActivity() {
                 //scaffold = 틀...
                 //  modifier 부분을 지웠음
 //                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                //Top bar = 컴포저블이 들어감...
                 Scaffold(
-                    //topBar 프로퍼티는 아무것도 안 받는 거에서 리턴값이 없는 함수를 받는다// () -> Unit
-                    // topBar = TopAppBar 이런식으로 넣으면 TopAppBar 자체를 넣는 게 아니라 결과값을 넣는거라서 에러가 나 버림...
-                    //  --> 람다함수를 써야 함
-                    //아래처럼 하면 Topappbar를 구현부로 하는 함수를 넣는 게 됨. oncreate 해주기!
-//                    topBar = {TopAppBar(title = {//})}
-                    // title에 넣는 것도 함수이기 떄문에 그냥 string 넣으면 안 됨
-                    //   -> 텍스트를 나타내는 텍스트 컴포저블 함수를 구현부로 하는 함수를 넣어야 함
-                    // 그러면 상단 Top App Bar 자리에 해당 택스트가 들어가 있다...
                     topBar = {
                         TopAppBar(
-                            //color 넣는 것. 컨테이너와 글자색 둘 다 바뀌었다.
                             colors = topAppBarColors(
                                 containerColor = MaterialTheme.colorScheme.primaryContainer,
                                 titleContentColor = MaterialTheme.colorScheme.primary
                             ),
                             title = { Text("Top App Bar") }
                         )
+                    },
+                    //바텀바 넣기
+                    bottomBar = {
+                        //BottomAppBar 선택할 때 action 어쩌구 없는거로
+                        BottomAppBar(
+                            containerColor = MaterialTheme.colorScheme.primaryContainer,
+                            contentColor = MaterialTheme.colorScheme.primary
+                        ) {
+                            //뭔가를 넣을 수 있음.
+                            //텍스트 정렬하려면 textAlign을 괄호 뒤에 추가하기.
+                            //  근데 그냥  textAlign = TextAlign.Center 이라고 하면, 텍스트의 범위가 텍스트에 딱 맞춰있는 상태라서
+                            //    정렬이 안 됨... 텍스트가 차지하고 있는 범위를 bottom app bar의 전체로 해줘야 가운데 정렬이 됨...
+                            //       = modifier 사용하라는 뜻
+                            Text(
+                                modifier = Modifier.fillMaxWidth(),
+                                textAlign = TextAlign.Center,
+                                text = "Bottom App Bar")
+                        }
                     }
                 ) { innerPadding ->
                     Greeting(
